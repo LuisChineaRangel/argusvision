@@ -1,7 +1,6 @@
 # Quiron
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Twitter](https://img.shields.io/twitter/follow/luctstt.svg?label=Follow&style=social)](https://twitter.com/iluzioDev)
 
 ---
 
@@ -18,7 +17,6 @@ Quiron leverages the powerful [Mediapipe framework](https://mediapipe.dev/), whi
 - Hand Recognition
 - Hand Movement Detection
 - Hand Gesture Recognition
-- Finger Counting
 
 ## Installation
 

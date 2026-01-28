@@ -1,4 +1,83 @@
+# ==================================================
+# System / OS
+# ==================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+Icon?
+*.swp
+*.swo
+
+# ==================================================
+# Python bytecode / cache
+# ==================================================
 __pycache__/
-modules/__pycache__
+*.py[cod]
+*.pyo
+*.so
+*.egg-info/
+.eggs/
+.pytest_cache/
+.cache/
+
+# ==================================================
+# Virtual environments / env files
+# ==================================================
+venv/
+.venv/
+.env
+.env.*
+pip-wheel-metadata/
+
+# ==================================================
+# Build / packaging
+# ==================================================
+build/
 dist/
-quiron.egg-info/
+wheelhouse/
+
+# ==================================================
+# Testing / coverage
+# ==================================================
+.coverage
+htmlcov/
+coverage.xml
+*coverage*
+
+# ==================================================
+# Logs / temp / runtime artifacts
+# ==================================================
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
+
+# ==================================================
+# Media / generated data (OpenCV outputs)
+# ==================================================
+data/runtime/
+data/output/
+*.mp4
+*.avi
+*.mov
+*.jpg
+*.png
+
+# ==================================================
+# IDEs / Editors
+# ==================================================
+.vscode/
+.idea/
+*.iml
+*.sublime-project
+*.sublime-workspace
+
+# ==================================================
+# Project-specific rules
+# ==================================================
+
+# MediaPipe models MUST be versioned
+!assets/
+!assets/*.task
