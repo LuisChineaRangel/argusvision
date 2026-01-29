@@ -1,7 +1,7 @@
 import numpy as np
 from abc import ABC, abstractmethod
 from mediapipe.tasks.python.vision.hand_landmarker import HandLandmark
-from logic import GeometryUtils
+from ..utils import GeometryUtils
 
 class HandMetrics:
     WRIST = HandLandmark.WRIST

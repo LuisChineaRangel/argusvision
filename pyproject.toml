@@ -1,0 +1,49 @@
+[tool.poetry]
+name = "argusvision"
+version = "1.2.0"
+description = "Cross-platform computer vision system for real-time video processing and analysis."
+authors = ["Luis Chinea Rangel <luischinearangel@gmail.com>"]
+readme = "README.md"
+packages = [{include = "argusvision", from = "src"}]
+keywords = ["computer-vision", "mediapipe", "pyside6", "real-time"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.15"
+opencv-python = "^4.10"
+pyside6 = "^6.8"
+numpy = "^2.0"
+mediapipe = "^0.10"
+
+[tool.poetry.group.dev.dependencies]
+watchdog = "^6.0"
+pytest = "^8.0"
+ruff = "^0.4"
+black = "^24.0"
+coverage = "^7.2"
+pytest-cov = "^7.0"
+
+[tool.poetry.scripts]
+argusvision = "argusvision.main:main"
+
+[tool.poetry.urls]
+"Homepage" = "https://github.com/LuisChineaRangel/argusvision"
+"Repository" = "https://github.com/LuisChineaRangel/argusvision"
+"Bug Tracker" = "https://github.com/LuisChineaRangel/argusvision/issues"
+
+[tool.ruff]
+line-length = 80
+target-version = "py310"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "--cov=argusvision --cov-report=term-missing"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

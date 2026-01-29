@@ -6,8 +6,8 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, Signal, QPropertyAnimation, QEasingCurve
 from PySide6.QtGui import QImage, QPixmap, QFont, QColor
-from logic import Theme
-from engine import EngineViewState
+from ..logic import Theme
+from ..engine import EngineViewState
 
 class BaseDashboardFrame(QFrame):
     def __init__(self, parent=None):

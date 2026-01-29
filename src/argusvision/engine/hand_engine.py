@@ -10,8 +10,8 @@ from mediapipe.tasks.python.vision import (
     RunningMode,
 )
 
-from logic import HandMetrics, HandGestureValidator, HandGeometry
-from engine import HandResult
+from ..logic import HandMetrics, HandGestureValidator, HandGeometry
+from . import HandResult
 
 
 class HandEngine:

@@ -3,10 +3,10 @@ import cv2
 import time
 from PySide6.QtWidgets import QApplication
 from PySide6.QtCore import QThread, Signal, QObject
-from engine import HandRenderer as Renderer
-from engine import EngineViewState, HandEngine
-from ui.dashboard import ArgusVisionWindow
-from logic import AppConfig
+from .engine import HandRenderer as Renderer
+from .engine import EngineViewState, HandEngine
+from .ui.dashboard import ArgusVisionWindow
+from .logic import AppConfig
 
 
 class VisionWorker(QObject):

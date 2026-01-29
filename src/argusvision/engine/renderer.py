@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from logic import Theme, HandMetrics
+from ..logic import Theme, HandMetrics
 
 # Hand skeleton paths grouped by functional segments for vectorized drawing
 HAND_PATHS = [
