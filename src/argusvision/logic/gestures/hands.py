@@ -20,16 +20,14 @@ class HandMetrics:
 class HandGeometry:
     def __init__(self, landmarks: list) -> None:
         self.landmarks = landmarks
+        # Cache landmarks as numpy array for faster distance calculations (x, y only)
+        self._np_points = np.array([[lm.x, lm.y] for lm in landmarks])
 
     def is_finger_extended(self, tip: int) -> bool:
         if tip == HandMetrics.THUMB:
-            pinky_mcp = self.landmarks[HandMetrics.PINKY - 3]
-            thumb_mcp = self.landmarks[HandMetrics.THUMB - 3]
-            thumb_tip = self.landmarks[HandMetrics.THUMB]
-
-            thumb_mcp = np.array([thumb_mcp.x, thumb_mcp.y])
-            pinky_mcp = np.array([pinky_mcp.x, pinky_mcp.y])
-            thumb_tip = np.array([thumb_tip.x, thumb_tip.y])
+            pinky_mcp = self._np_points[HandMetrics.PINKY - 3]
+            thumb_mcp = self._np_points[HandMetrics.THUMB - 3]
+            thumb_tip = self._np_points[HandMetrics.THUMB]
 
             base_dist = GeometryUtils.get_distance(thumb_mcp, pinky_mcp)
             tip_dist = GeometryUtils.get_distance(thumb_tip, pinky_mcp)
@@ -37,10 +35,10 @@ class HandGeometry:
             return tip_dist > base_dist * (1 - HandMetrics.GESTURE_PRECISION)
 
         # Other fingers
-        wrist = self.landmarks[HandMetrics.WRIST]
-        wrist = np.array([wrist.x, wrist.y])
-        tip_pos = np.array([self.landmarks[tip].x, self.landmarks[tip].y])
-        pip = np.array([self.landmarks[tip - 2].x, self.landmarks[tip - 2].y])
+        wrist = self._np_points[HandMetrics.WRIST]
+        tip_pos = self._np_points[tip]
+        pip = self._np_points[tip - 2]
+
         tip_dist = GeometryUtils.get_distance(tip_pos, wrist)
         pip_dist = GeometryUtils.get_distance(pip, wrist)
 

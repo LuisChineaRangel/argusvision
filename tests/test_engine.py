@@ -6,9 +6,9 @@ from argusvision.logic.gestures import HandMetrics
 
 
 def test_hand_engine_initialization():
-    # Only test if model file exists
-    if not os.path.exists("assets/mp_models/hand_landmarker.task"):
-        pytest.skip("Model file not found")
+    model_path = "src/argusvision/assets/mp_models/hand_landmarker.task"
+    if not os.path.exists(model_path):
+        pytest.skip(f"Model file not found at {model_path}")
 
     try:
         engine = HandEngine(use_gpu=False)
@@ -17,16 +17,18 @@ def test_hand_engine_initialization():
     except Exception as e:
         pytest.fail(f"HandEngine failed to initialize: {e}")
 
+
 def test_resolve_label():
     # We need a dummy object that has handedness[0].category_name
     class DummyHandedness:
         def __init__(self, category_name):
             self.category_name = category_name
 
-    engine = HandEngine.__new__(HandEngine) # Skip init
+    engine = HandEngine.__new__(HandEngine)  # Skip init
 
     assert engine._resolve_label([DummyHandedness("Left")]) == "Right"
     assert engine._resolve_label([DummyHandedness("Right")]) == "Left"
+
 
 def test_detect_movement():
     engine = HandEngine.__new__(HandEngine)

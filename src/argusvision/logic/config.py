@@ -9,16 +9,18 @@ class AppConfig:
 
 class Theme:
     # Color palette (RGB)
-    PRIMARY = (255, 87, 34)     # Material Deep Orange
-    SECONDARY = (231, 76, 60)   # Material Red
-    SUCCESS = (76, 175, 80)     # Material Green
-    ACCENT = (33, 150, 243)     # Material Blue
+    PRIMARY = (0, 255, 204)     # Neon Cyan
+    SECONDARY = (255, 82, 82)   # Coral Red
+    SUCCESS = (76, 175, 80)     # Green
+    ACCENT = (33, 150, 243)     # Blue
 
-    PANEL_BG = (18, 18, 18)     # Material Dark Background
-    SECTION_BG = (30, 30, 30)   # Material Surface
+    PANEL_BG = (26, 26, 26)     # Dark Gray
+    SECTION_BG = (30, 30, 30)   # Surface
     TEXT_MAIN = (255, 255, 255)
-    TEXT_DIM = (176, 176, 176)
+    TEXT_DIM = (136, 136, 136)
 
     FONT = cv2.FONT_HERSHEY_SIMPLEX
     BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)
+
+    QT_FONT_FAMILY = "Segoe UI"

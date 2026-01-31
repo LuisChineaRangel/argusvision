@@ -1,12 +1,25 @@
 import sys
 import cv2
+import os
 import time
-from PySide6.QtWidgets import QApplication
-from PySide6.QtCore import QThread, Signal, QObject
-from .engine import HandRenderer as Renderer
-from .engine import EngineViewState, HandEngine
-from .ui.dashboard import ArgusVisionWindow
+import PySide6
+from PySide6.QtGui import QGuiApplication
+from PySide6.QtQml import QQmlApplicationEngine
+from PySide6.QtCore import QThread, Signal, QObject, QUrl
+
+from .engine import HandRenderer, EngineViewState
+from .views.bridge import ViewBridge, VideoImageProvider
 from .logic import AppConfig
+
+pyside_dir = os.path.dirname(PySide6.__file__)
+os.environ['QT_PLUGIN_PATH'] = os.path.join(pyside_dir, "plugins")
+os.environ['QML2_IMPORT_PATH'] = os.path.join(pyside_dir, "qml")
+
+current_dir = os.path.dirname(__file__)
+os.environ['QT_QUICK_CONTROLS_CONF'] = os.path.join(current_dir, "views", "qtquickcontrols2.conf")
+
+if hasattr(os, "add_dll_directory"):
+    os.add_dll_directory(pyside_dir)
 
 
 class VisionWorker(QObject):
@@ -16,17 +29,12 @@ class VisionWorker(QObject):
     def __init__(self):
         super().__init__()
         self.running = True
-        self.tracker = None
-        self.canvas = None
+        self.renderer = None
         self.cap = None
 
     def run(self):
-        prev_time = 0
-
-        # Initialize resources only when the worker_thread starts
         try:
-            self.tracker = HandEngine(use_gpu=False)
-            self.canvas = Renderer()
+            self.renderer = HandRenderer()
             self.cap = cv2.VideoCapture(0)
         except Exception as e:
             self.error_occurred.emit(f"Initialization failed: {e}")
@@ -37,48 +45,23 @@ class VisionWorker(QObject):
             return
 
         while self.running:
+            start_time = time.time()
             success, frame = self.cap.read()
             if not success:
                 continue
 
             try:
-                # Pre-processing
-                frame = cv2.flip(frame, 1)
-                h, w = frame.shape[:2]
-
-                # Resizing for engine performance
-                scale = AppConfig.PROCESS_WIDTH / w
-                process_frame = cv2.resize(frame, (0, 0), fx=scale, fy=scale)
-
-                timestamp_ms = int(time.time() * 1000)
-                processed_hands = self.tracker.process_frame(process_frame, timestamp_ms)
-
-                # Logic & Drawing
-                detected_gestures = []
-                total_fingers = sum(h.fingers_count for h in processed_hands)
-
-                for hand_data in processed_hands:
-                    if hand_data.gesture:
-                        detected_gestures.append(f"{hand_data.label}: {hand_data.gesture}")
-                    self.canvas.draw_hand(frame, hand_data)
-
-                # FPS Calculation
-                curr_time = time.time()
-                fps = 1 / (curr_time - prev_time) if prev_time else 0
-                prev_time = curr_time
-
-                state = EngineViewState(
-                    frame=frame,
-                    fps=fps,
-                    fingers=total_fingers,
-                    hands=len(processed_hands),
-                    gestures=detected_gestures
-                )
-                self.state_updated.emit(state)
-
+                state = self.renderer.render_frame(frame)
+                if state:
+                    self.state_updated.emit(state)
             except Exception as e:
                 self.error_occurred.emit(str(e))
                 break
+
+            # Control frame rate to save CPU
+            elapsed = (time.time() - start_time) * 1000
+            delay = max(1, AppConfig.FRAME_DELAY - elapsed)
+            time.sleep(delay / 1000.0)
 
         if self.cap:
             self.cap.release()
@@ -90,11 +73,25 @@ class VisionWorker(QObject):
 class ArgusVisionApp(QObject):
     def __init__(self):
         super().__init__()
-        self.app = QApplication(sys.argv)
-        self.window = ArgusVisionWindow()
-        self.window.exit_requested.connect(self.window.close)
 
-        # Threading setup
+        self.app = QGuiApplication.instance() or QGuiApplication(sys.argv)
+        self.engine = QQmlApplicationEngine()
+
+        views_path = os.path.join(os.path.dirname(__file__), "views")
+        self.engine.addImportPath(views_path)
+
+        self.bridge = ViewBridge()
+        self.image_provider = VideoImageProvider()
+
+        self.engine.addImageProvider("video", self.image_provider)
+        self.engine.setInitialProperties({"view_bridge": self.bridge})
+
+        qml_file = os.path.join(os.path.dirname(__file__), "views", "Main.qml")
+        self.engine.load(QUrl.fromLocalFile(qml_file))
+
+        if not self.engine.rootObjects():
+            sys.exit(-1)
+
         self.worker_thread = QThread(self)
         self.worker = VisionWorker()
         self.worker.moveToThread(self.worker_thread)
@@ -104,12 +101,12 @@ class ArgusVisionApp(QObject):
         self.worker.error_occurred.connect(print)
 
     def update_ui(self, state):
-        self.window.update(state)
+        self.bridge.update_state(state)
+        self.image_provider.update_frame(state.frame)
 
     def run(self):
-        print(f"Starting {AppConfig.TITLE} interface...")
+        print(f"Starting {AppConfig.TITLE} interface (Qt Quick)...")
         self.worker_thread.start()
-        self.window.showMaximized()
 
         exit_code = self.app.exec()
         self.cleanup()
@@ -119,8 +116,6 @@ class ArgusVisionApp(QObject):
         self.worker.stop()
         self.worker_thread.quit()
         self.worker_thread.wait()
-
-
 
 def main():
     app = ArgusVisionApp()

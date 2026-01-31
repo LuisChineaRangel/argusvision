@@ -7,13 +7,18 @@ class MockLM:
     x: float
     y: float
 
+class MockRenderer(Renderer):
+    def _analyze_and_draw(self, frame: np.ndarray):
+        from argusvision.engine.models import EngineViewState
+        return EngineViewState(frame, 0, 0, 0, [])
+
 def test_renderer_clamp():
     assert Renderer._clamp(10, 0, 100) == 10
     assert Renderer._clamp(-5, 0, 100) == 0
     assert Renderer._clamp(150, 0, 100) == 100
 
 def test_get_pixel_array():
-    renderer = Renderer()
+    renderer = MockRenderer()
     landmarks = [
         MockLM(0.1, 0.2),
         MockLM(0.5, 0.5),
@@ -30,7 +35,7 @@ def test_get_pixel_array():
     assert np.array_equal(pixels, expected)
 
 def test_renderer_init():
-    renderer = Renderer()
+    renderer = MockRenderer()
     from argusvision.logic import Theme
     # Check if colors are reversed (RGB to BGR)
     assert renderer.c_primary == Theme.PRIMARY[::-1]

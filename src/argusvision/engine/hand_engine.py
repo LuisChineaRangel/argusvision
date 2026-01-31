@@ -11,7 +11,7 @@ from mediapipe.tasks.python.vision import (
 )
 
 from ..logic import HandMetrics, HandGestureValidator, HandGeometry
-from . import HandResult
+from .models import HandResult
 
 
 class HandEngine:
@@ -27,7 +27,7 @@ class HandEngine:
 
     def _initialize_detector(self, use_gpu: bool) -> None:
         delegate = BaseOptions.Delegate.GPU if use_gpu else BaseOptions.Delegate.CPU
-        base_options = BaseOptions("assets/mp_models/hand_landmarker.task", delegate)
+        base_options = BaseOptions("src/argusvision/assets/mp_models/hand_landmarker.task", delegate)
         options = HandLandmarkerOptions(base_options, RunningMode.VIDEO, 2, 0.5)
 
         self.detector = HandLandmarker.create_from_options(options)

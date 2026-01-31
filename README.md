@@ -47,7 +47,7 @@ The project is organized into the following main directories:
 - `src/argusvision/engine/`: Core CV processing, including `HandEngine` and vectorized `Renderer`.
 - `src/argusvision/logic/`: Math utilities, gesture definitions, and validation logic.
 - `src/argusvision/ui/`: Interactive dashboard built with PySide6.
-- `assets/mp_models/`: Pre-trained MediaPipe task models.
+- `src/argusvision/assets/mp_models/`: Pre-trained MediaPipe task models.
 - `tests/`: Automated test suite for cross-platform validation.
 - `scripts/`: Development and utility scripts.
 

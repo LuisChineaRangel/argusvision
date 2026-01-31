@@ -1,0 +1,7 @@
+module components
+
+singleton Theme 1.0 AppTheme.qml
+
+BaseFrame 1.0 BaseFrame.qml
+GestureList 1.0 GestureList.qml
+InfoCard 1.0 InfoCard.qml
