@@ -37,10 +37,17 @@ jobs:
           restore-keys: |
             poetry-
 
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libegl1 libopengl0 libxcb-cursor0 libxkbcommon-x11-0
+
       - name: Install Dependencies
         run: poetry install --no-interaction --no-root
 
       - name: Run Tests with Coverage
+        env:
+          QT_QPA_PLATFORM: offscreen
         run: |
           poetry run pytest --cov=src/argusvision --cov-report=xml
           poetry run coverage report
