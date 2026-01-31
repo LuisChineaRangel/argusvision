@@ -1,5 +1,4 @@
 import numpy as np
-import pytest
 from dataclasses import dataclass
 from argusvision.logic import Theme
 from argusvision.engine import Renderer, EngineViewState

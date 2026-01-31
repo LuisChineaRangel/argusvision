@@ -1,8 +1,8 @@
+import numpy as np
 from PySide6.QtGui import QImage
 from unittest.mock import MagicMock
-from argusvision.views.bridge import ViewBridge, VideoImageProvider
 from argusvision.engine.models import EngineViewState
-import numpy as np
+from argusvision.views.bridge import ViewBridge, VideoImageProvider
 
 def test_view_bridge_properties():
     bridge = ViewBridge()

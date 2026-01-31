@@ -27,7 +27,7 @@ jobs:
         with:
           poetry-version: "2.3.1"
 
-      - name: Cache Poetry Cache
+      - name: Poetry Cache
         uses: actions/cache@v4
         with:
           path: |

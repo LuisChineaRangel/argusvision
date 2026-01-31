@@ -1,19 +1,19 @@
 import pytest
 import numpy as np
-from unittest.mock import MagicMock, patch
 from argusvision.engine import HandEngine
+from unittest.mock import MagicMock, patch
 from argusvision.logic.gestures import HandMetrics
 
 
 def test_hand_engine_initialization_failure():
-    with patch("mediapipe.tasks.python.vision.HandLandmarker.create_from_options") as mock_create:
+    with patch("argusvision.engine.hand_engine.HandLandmarker.create_from_options") as mock_create:
         mock_create.side_effect = Exception("Initialization error")
         with pytest.raises(Exception, match="Initialization error"):
             HandEngine(use_gpu=False)
 
 
 def test_hand_engine_process_frame_no_hands():
-    with patch("mediapipe.tasks.python.vision.HandLandmarker.create_from_options"):
+    with patch("argusvision.engine.hand_engine.HandLandmarker.create_from_options"):
         engine = HandEngine(use_gpu=False)
         mock_result = MagicMock()
         mock_result.hand_landmarks = []
@@ -25,7 +25,7 @@ def test_hand_engine_process_frame_no_hands():
 
 
 def test_hand_engine_process_frame_with_hands():
-    with patch("mediapipe.tasks.python.vision.HandLandmarker.create_from_options"):
+    with patch("argusvision.engine.hand_engine.HandLandmarker.create_from_options"):
         engine = HandEngine(use_gpu=False)
 
         # Mocking a landmark result
