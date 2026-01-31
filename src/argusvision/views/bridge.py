@@ -8,7 +8,7 @@ class VideoImageProvider(QQuickImageProvider):
         super().__init__(QQuickImageProvider.ImageType.Image)
         self.current_frame = QImage()
 
-    def requestImage(self, id, size, requestedSize):
+    def requestImage(self, id, size, requested_size):
         if self.current_frame.isNull():
             img = QImage(640, 480, QImage.Format.Format_RGB32)
             img.fill(0)
